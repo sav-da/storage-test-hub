@@ -63,3 +63,6 @@ func (qs *Service) Close() {
 		log.Println("Error closing connection:", err)
 	}
 }
+func (qs *Service) CreateTestQueue() error {
+	return qs.DeclareQueue("tests_queue")
+}
