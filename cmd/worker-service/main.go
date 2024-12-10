@@ -1,16 +1,18 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
 	"log"
 	"os"
 	"os/signal"
-	"syscall"
+	"sth/pkg/config"
 
-	"worker-service/internal/config"
-	"worker-service/internal/queue"
+	"sth/internal/worker-service/queue"
+	"syscall"
 )
 
 func main() {
+	gin.SetMode(gin.ReleaseMode)
 	cfg := config.LoadConfig()
 	cfg.Validate()
 

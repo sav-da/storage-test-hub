@@ -20,6 +20,7 @@ func main() {
 		log.Fatal("Failed to create test queue:", err)
 	}
 
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 
 	router.POST("/tests", func(c *gin.Context) {

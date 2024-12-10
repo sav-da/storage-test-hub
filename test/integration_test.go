@@ -11,7 +11,7 @@ func TestAuthService(t *testing.T) {
 	body := map[string]string{"worker_id": "test_worker"}
 	bodyJSON, _ := json.Marshal(body)
 
-	resp, err := http.Post("http://localhost:8080/auth/token", "application/json", bytes.NewBuffer(bodyJSON))
+	resp, err := http.Post("http://localhost:8080/auth/login", "application/json", bytes.NewBuffer(bodyJSON))
 	if err != nil {
 		t.Fatalf("Failed to call Auth Service: %v", err)
 	}

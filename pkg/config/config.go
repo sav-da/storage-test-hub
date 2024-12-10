@@ -2,34 +2,54 @@ package config
 
 import (
 	"log"
-
-	"github.com/spf13/viper"
+	"os"
 )
 
 type Config struct {
-	AppName  string `mapstructure:"APP_NAME"`
-	Port     string `mapstructure:"PORT"`
-	RabbitMQ struct {
-		URL string `mapstructure:"RABBITMQ_URL"`
-	} `mapstructure:"RABBITMQ"`
+	RabbitMQURL  string
+	QueueName    string
+	AuthService  string
+	TestService  string
+	QueueService string
 }
 
-func LoadConfig(path string) (*Config, error) {
-	viper.AddConfigPath(path)
-	viper.SetConfigName("config")
-	viper.SetConfigType("env")
-
-	viper.AutomaticEnv()
-
-	if err := viper.ReadInConfig(); err != nil {
-		return nil, err
+func LoadConfig() *Config {
+	rabbitMQURL := os.Getenv("RABBITMQ_URL")
+	if rabbitMQURL == "" {
+		rabbitMQURL = "amqp://user:pass@localhost:5672/"
 	}
 
-	var config Config
-	if err := viper.Unmarshal(&config); err != nil {
-		return nil, err
+	queueName := os.Getenv("QUEUE_NAME")
+	if queueName == "" {
+		queueName = "tests_queue"
 	}
 
-	log.Println("Configuration loaded successfully")
-	return &config, nil
+	authService := os.Getenv("AUTH_SERVICE")
+	if authService == "" {
+		authService = "http://localhost:8081"
+	}
+
+	testService := os.Getenv("TEST_SERVICE")
+	if testService == "" {
+		testService = "http://localhost:8082"
+	}
+
+	queueService := os.Getenv("QUEUE_SERVICE")
+	if queueService == "" {
+		queueService = "http://localhost:8083"
+	}
+
+	return &Config{
+		RabbitMQURL:  rabbitMQURL,
+		QueueName:    queueName,
+		AuthService:  authService,
+		TestService:  testService,
+		QueueService: queueService,
+	}
+}
+
+func (c *Config) Validate() {
+	if c.RabbitMQURL == "" || c.QueueName == "" {
+		log.Fatalf("Invalid configuration: RabbitMQURL and QueueName must be set")
+	}
 }

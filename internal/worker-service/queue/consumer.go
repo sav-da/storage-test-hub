@@ -2,7 +2,7 @@ package queue
 
 import (
 	"log"
-	"worker-service/internal/task"
+	"sth/internal/worker-service/task"
 
 	"github.com/rabbitmq/amqp091-go"
 )
